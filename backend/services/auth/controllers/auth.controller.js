@@ -2,6 +2,8 @@ import { getAuth } from "firebase-admin/auth";
 import { app } from "../config/firebase.js";
 import User from "../models/user.model.js";
 
+import redis from "../../../shared/redis/redis.js";
+
 
 
 export const login=async(req,res)=>{
@@ -42,6 +44,26 @@ console.log(decoded);
 
 // redissssss
 
+await redis.set(
+
+      `session:${sessionId}`,
+
+      JSON.stringify({
+
+        userId:user._id,
+
+        email:user.email,
+        avatar:user.avatar,
+        name: user.name,
+        plan: user.plan,
+        credits: user.credits,
+        totalCredits: user.totalCredits
+
+      }),
+      "EX", 60 * 60 * 24 * 7
+    );
+
+
          res.cookie( "session",sessionId,
 
       {
@@ -66,3 +88,49 @@ console.log(decoded);
     
     return res.status(401).json({ message: error.message });
 }}
+
+
+export const logout =
+  async (req, res) => {
+
+    try {
+
+      const sessionId =req.cookies?.session;
+
+      if (sessionId) {
+
+        await redis.del(`session:${sessionId}`
+        );
+
+      }
+
+      res.clearCookie(
+        "session",
+        {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax"
+        }
+      );
+
+      return res.status(200).json({
+
+        success: true,
+
+        message: "Logged out successfully"
+
+      });
+
+    } catch (error) {
+
+      return res.status(500).json({
+
+        success: false,
+
+        message: error.message
+
+      });
+
+    }
+
+  };
