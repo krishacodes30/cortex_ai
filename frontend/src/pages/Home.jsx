@@ -7,11 +7,15 @@ import { FaGoogle } from "react-icons/fa";
 import { auth,googleProvider } from '../../utils/firebase'
 import { signInWithPopup } from 'firebase/auth'
 import api from '../../utils/axios'
+import { useSelector } from 'react-redux';
 
 
 
 
 function Home() {
+      const { userData } = useSelector(state => state.user);
+      console.log(userData)
+
     const handleLogin = async (token) => {
     try {
       const { data } = await api.post("/api/auth/login", {token})
@@ -34,7 +38,9 @@ function Home() {
       console.error("Error during login:", error)
     }
   }
-  return (
+  return (<>
+
+      {!userData && (
   <div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="w-[340px] bg-[#13151c] border border-white/[0.08] rounded-2xl p-7 flex flex-col gap-5">
@@ -57,8 +63,10 @@ function Home() {
 
 
 
-</div>
-  )
+</div>)}
+</>)
+  
 }
+
 
 export default Home
