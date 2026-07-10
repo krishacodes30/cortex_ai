@@ -8,10 +8,7 @@ import {
 }
 from "./state.js";
 
-import {
- routerNode
-}
-from "./router.node.js";
+
 
 import {
  chatAgent
@@ -32,9 +29,10 @@ import {
  pdfAgent
 }
 from "../agents/pdf.agent.js";
-import { pptAgent } from "../agents/ppt.agent.js";
+// import { pptAgent } from "../agents/ppt.agent.js";
 import { imageAgent } from "../agents/imageGen.agent.js";
 import { visionAgent } from "../agents/vision.agent.js";
+import { routerNode } from "./router.node.js";
 // import { pdfRagAgent } from "../agents/pdfRag.agent.js";
 
 const workflow =
@@ -66,10 +64,10 @@ workflow.addNode(
  "pdf",
  pdfAgent
 );
-workflow.addNode(
- "ppt",
- pptAgent
-);
+// workflow.addNode(
+//  "ppt",
+//  pptAgent
+// );
 workflow.addNode(
  "image",
  imageAgent
@@ -104,8 +102,8 @@ workflow.addConditionalEdges(
    case "pdf":
     return "pdf";
 
-    case "ppt":
-    return "ppt";
+    // case "ppt":
+    // return "ppt";
 
     case "image":
     return "image";
@@ -131,7 +129,7 @@ workflow.addConditionalEdges(
   coding:"coding",
 
   pdf:"pdf",
-   ppt:"ppt",
+  //  ppt:"ppt",
    image:"image",
    vision:"vision",
   //  pdf_rag:"pdf_rag"
@@ -158,10 +156,10 @@ workflow.addEdge(
   "pdf",
   "__end__"
 );
-workflow.addEdge(
-  "ppt",
-  "__end__"
-);
+// workflow.addEdge(
+//   "ppt",
+//   "__end__"
+// );
 
 workflow.addEdge(
   "chat",

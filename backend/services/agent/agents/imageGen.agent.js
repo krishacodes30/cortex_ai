@@ -1,129 +1,129 @@
-import axios from "axios";
-import { getModel } from "../utils/model.js";
+// import axios from "axios";
+// import { getModel } from "../utils/model.js";
 
-import { uploadToS3 } from "../utils/uploadToS3.js";
-import { getDownloadUrl } from "../utils/getDownloadUrl.js";
-import { checkAgentLimit } from "../config/agentRateLimit.js";
-import { deductCredits } from "../utils/deductCredits.js";
+// import { uploadToS3 } from "../utils/uploadToS3.js";
+// import { getDownloadUrl } from "../utils/getDownloadUrl.js";
+// import { checkAgentLimit } from "../config/agentRateLimit.js";
+// import { deductCredits } from "../utils/deductCredits.js";
 
 export const imageAgent = async (state) => {
 
-  try {
+//   try {
 
-await checkAgentLimit(
-    state.userId,
-    "image"
-  );
- await deductCredits(
+// await checkAgentLimit(
+//     state.userId,
+//     "image"
+//   );
+//  await deductCredits(
 
-        state.userId,
+//         state.userId,
 
-        "image"
+//         "image"
 
-    );
+//     );
 
 
-    const llm =
-      getModel("image");
+//     const llm =
+//       getModel("image");
 
-    const promptResponse =
-      await llm.invoke(`
+//     const promptResponse =
+//       await llm.invoke(`
 
-You are an elite AI image prompt engineer.
+// You are an elite AI image prompt engineer.
 
-Convert the user request into a highly detailed image generation prompt.
+// Convert the user request into a highly detailed image generation prompt.
 
-Requirements:
+// Requirements:
 
-- Cinematic lighting
-- Professional composition
-- Ultra realistic
-- High detail
-- Beautiful color palette
-- Sharp focus
-- 8K quality
-- Photorealistic
-- Depth of field
-- Professional photography
-- Stunning visuals
+// - Cinematic lighting
+// - Professional composition
+// - Ultra realistic
+// - High detail
+// - Beautiful color palette
+// - Sharp focus
+// - 8K quality
+// - Photorealistic
+// - Depth of field
+// - Professional photography
+// - Stunning visuals
 
-Return only the image prompt.
+// Return only the image prompt.
 
-User Request:
+// User Request:
 
-${state.prompt}
+// ${state.prompt}
 
-`);
+// `);
 
-    const enhancedPrompt =
-      promptResponse.content.trim();
+//     const enhancedPrompt =
+//       promptResponse.content.trim();
 
-    const imageUrl =
-      `https://image.pollinations.ai/prompt/${encodeURIComponent(
-        enhancedPrompt
-      )}`;
+//     const imageUrl =
+//       `https://image.pollinations.ai/prompt/${encodeURIComponent(
+//         enhancedPrompt
+//       )}`;
 
-    const imageResponse =
-      await axios.get(
-        imageUrl,
-        {
-          responseType:
-            "arraybuffer"
-        }
-      );
+//     const imageResponse =
+//       await axios.get(
+//         imageUrl,
+//         {
+//           responseType:
+//             "arraybuffer"
+//         }
+//       );
 
-    const imageBuffer =
-      Buffer.from(
-        imageResponse.data
-      );
+//     const imageBuffer =
+//       Buffer.from(
+//         imageResponse.data
+//       );
 
-    const fileName =
-      `image-${Date.now()}.png`;
+//     const fileName =
+//       `image-${Date.now()}.png`;
 
-    await uploadToS3(
-      imageBuffer,
-      fileName,
-      "image/png"
-    );
+//     await uploadToS3(
+//       imageBuffer,
+//       fileName,
+//       "image/png"
+//     );
 
-    const downloadUrl =
-      await getDownloadUrl(
-        fileName,
-        24*60*60
-      );
+//     const downloadUrl =
+//       await getDownloadUrl(
+//         fileName,
+//         24*60*60
+//       );
 
-    return {
+//     return {
 
-      ...state,
+//       ...state,
 
-     response: `
-# 🖼️ Image Generated Successfully
+//      response: `
+// # 🖼️ Image Generated Successfully
 
-![Generated Image](${downloadUrl})
+// ![Generated Image](${downloadUrl})
 
-📥 [Download Image](${downloadUrl})
+// 📥 [Download Image](${downloadUrl})
 
-⏳ Link expires in 10 minutes.
-`
+// ⏳ Link expires in 10 minutes.
+// `
 
-    };
+//     };
 
-  } catch (error) {
+//   } catch (error) {
 
-    console.log(
-      "Image Agent Error:",
-      error
-    );
+//     console.log(
+//       "Image Agent Error:",
+//       error
+//     );
 
-    return {
+//     return {
 
-      ...state,
+//       ...state,
 
-      response:
-        "❌ Failed to generate image."
+//       response:
+//         "❌ Failed to generate image."
 
-    };
+//     };
 
-  }
+//   }
 
 };

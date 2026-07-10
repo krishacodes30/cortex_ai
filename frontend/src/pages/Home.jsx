@@ -1,48 +1,51 @@
 import React from 'react'
 import '/src/App.css'
 import { FaGoogle } from "react-icons/fa";
-
-
-
 import { auth,googleProvider } from '../../utils/firebase'
 import { signInWithPopup } from 'firebase/auth'
-import api from '../../utils/axios'
-import { useSelector } from 'react-redux';
+// import api from '../../utils/axios'
 
 
 
+
+import { useDispatch, useSelector } from "react-redux";
+
+// import ArtifactPanel from "../components/ArtifactPanel";
+import ChatArea from "../components/ChatArea";
+import Sidebar from "../components/Sidebar";
+
+import { setUserData } from "../redux/user.slice";
+import api from '../../utils/axios.js';
+// import { signInWithPopup } from "firebase/auth";
+// import { auth, googleProvider } from "../../firebase";
 
 function Home() {
-      const { userData } = useSelector(state => state.user);
-      console.log(userData)
-
-    const handleLogin = async (token) => {
-    try {
-      const { data } = await api.post("/api/auth/login", {token})
-      console.log(data)
-    } catch (error) {
-      console.log(error)
-    }
+  const { userData } = useSelector(state => state.user);
+  const dispatch=useDispatch()
+const login=async (token)=>{
+  try {
+    const {data}=await api.post(`/api/auth/login`,{token})
+    dispatch(setUserData(data.user))
+  } catch (error) {
+    console.log(error)
   }
-  const googleLogin = async () => {
-    try {
-      const data = await signInWithPopup(auth, googleProvider)
-      console.log(data)
-      const token = await data.user.getIdToken() 
-      
-      console.log("Firebase Token:", token)
-      await handleLogin(token)
+}
+  const handleGoogleLogin =async () => {
+     const result =
+     await signInWithPopup(auth,googleProvider);
+    
+     const token =await result.user.getIdToken();
+     await login(token)
+  };
 
-      console.log(data)
-    } catch (error) {
-      console.error("Error during login:", error)
-    }
-  }
-  return (<>
+  return (
+<div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
+      <Sidebar />
+      <ChatArea />
+      {/* <ArtifactPanel /> */}
 
       {!userData && (
-  <div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
-     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="w-[340px] bg-[#13151c] border border-white/[0.08] rounded-2xl p-7 flex flex-col gap-5">
 
             <div className="flex flex-col gap-1">
@@ -51,7 +54,7 @@ function Home() {
             </div>
 
             <button
-  onClick={googleLogin}
+  onClick={handleGoogleLogin}
   className="w-full flex items-center justify-center gap-3 py-[11px] rounded-xl text-sm font-medium text-white bg-gradient-to-br from-indigo-500 to-violet-700 hover:from-indigo-400 hover:to-violet-600 active:from-indigo-600 active:to-violet-800 border border-indigo-500/30 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-150 cursor-pointer"
 >
   <FaGoogle size={15} className="text-white" />
@@ -60,13 +63,9 @@ function Home() {
 
           </div>
         </div>
-
-
-
-</div>)}
-</>)
-  
+      )}
+    </div>
+  );
 }
 
-
-export default Home
+export default Home;

@@ -1,133 +1,133 @@
-import fs from "fs/promises";
+// import fs from "fs/promises";
 
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+// import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
-import { getModel } from "../utils/model.js";
+// import { getModel } from "../utils/model.js";
 
-import { checkAgentLimit } from "../config/agentRateLimit.js";
+// import { checkAgentLimit } from "../config/agentRateLimit.js";
 
-import { deductCredits } from "../utils/deductCredits.js";
+// import { deductCredits } from "../utils/deductCredits.js";
 
 export const visionAgent = async (state) => {
 
-  try {
+//   try {
 
-    await checkAgentLimit(
-      state.userId,
-      "image"
-    );
+//     await checkAgentLimit(
+//       state.userId,
+//       "image"
+//     );
 
-    await deductCredits(
-      state.userId,
-      "image"
-    );
+//     await deductCredits(
+//       state.userId,
+//       "image"
+//     );
 
-    const llm =
-      getModel("vision");
+//     const llm =
+//       getModel("vision");
 
-    const imageBuffer =
-      await fs.readFile(
-        state.file.path
-      );
+//     const imageBuffer =
+//       await fs.readFile(
+//         state.file.path
+//       );
 
-    const base64Image =
-      imageBuffer.toString("base64");
+//     const base64Image =
+//       imageBuffer.toString("base64");
 
-    const messages = [
+//     const messages = [
 
-      new SystemMessage(`
+//       new SystemMessage(`
 
-You are CortexAI Vision Agent.
+// You are CortexAI Vision Agent.
 
-Rules:
+// Rules:
 
-- Analyze only the uploaded image.
-- Answer the user's question accurately.
-- If text exists in the image, extract it.
-- If charts or tables exist, explain them.
-- If something is unclear, say so.
-- Use Markdown when helpful.
-- Do not hallucinate.
+// - Analyze only the uploaded image.
+// - Answer the user's question accurately.
+// - If text exists in the image, extract it.
+// - If charts or tables exist, explain them.
+// - If something is unclear, say so.
+// - Use Markdown when helpful.
+// - Do not hallucinate.
 
-`),
+// `),
 
-      new HumanMessage({
+//       new HumanMessage({
 
-        content: [
+//         content: [
 
-          {
+//           {
 
-            type: "text",
+//             type: "text",
 
-            text:
+//             text:
 
-              state.prompt ||
+//               state.prompt ||
 
-              "Describe this image."
+//               "Describe this image."
 
-          },
+//           },
 
-          {
+//           {
 
-            type: "image_url",
+//             type: "image_url",
 
-            image_url: {
+//             image_url: {
 
-              url: `data:${state.file.mimetype};base64,${base64Image}`
+//               url: `data:${state.file.mimetype};base64,${base64Image}`
 
-            }
+//             }
 
-          }
+//           }
 
-        ]
+//         ]
 
-      })
+//       })
 
-    ];
+//     ];
 
-    const response =
-      await llm.invoke(
-        messages
-      );
+//     const response =
+//       await llm.invoke(
+//         messages
+//       );
 
-    return {
+//     return {
 
-      ...state,
+//       ...state,
 
-      response:
-        response.content
+//       response:
+//         response.content
 
-    };
+//     };
 
-  }
+//   }
 
-  finally {
+//   finally {
 
-    if(state.file){
+//     if(state.file){
 
-      try{
+//       try{
 
-        await fs.unlink(
-          state.file.path
-        );
+//         await fs.unlink(
+//           state.file.path
+//         );
 
-        console.log(
-          "Deleted:",
-          state.file.path
-        );
+//         console.log(
+//           "Deleted:",
+//           state.file.path
+//         );
 
-      }
+//       }
 
-      catch(err){
+//       catch(err){
 
-        console.log(
-          err.message
-        );
+//         console.log(
+//           err.message
+//         );
 
-      }
+//       }
 
-    }
+//     }
 
-  }
+//   }
 
 };

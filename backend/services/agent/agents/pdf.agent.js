@@ -1,211 +1,211 @@
-import PDFDocument from "pdfkit";
-import { getModel } from "../utils/model.js";
+// import PDFDocument from "pdfkit";
+// import { getModel } from "../utils/model.js";
 
-import { uploadToS3 } from "../utils/uploadToS3.js";
-import { getDownloadUrl } from "../utils/getDownloadUrl.js";
-import { checkAgentLimit } from "../config/agentRateLimit.js";
-import { deductCredits } from "../utils/deductCredits.js";
+// import { uploadToS3 } from "../utils/uploadToS3.js";
+// import { getDownloadUrl } from "../utils/getDownloadUrl.js";
+// import { checkAgentLimit } from "../config/agentRateLimit.js";
+// import { deductCredits } from "../utils/deductCredits.js";
 
 export const pdfAgent = async (state) => {
 
-  try {
-await checkAgentLimit(
-    state.userId,
-    "pdf"
-  );
- await deductCredits(
+//   try {
+// await checkAgentLimit(
+//     state.userId,
+//     "pdf"
+//   );
+//  await deductCredits(
 
-        state.userId,
+//         state.userId,
 
-        "pdf"
+//         "pdf"
 
-    );  
-    const llm =
-      getModel("pdf");
+//     );  
+//     const llm =
+//       getModel("pdf");
 
-    const aiResponse =
-      await llm.invoke(`
+//     const aiResponse =
+//       await llm.invoke(`
 
-Create a professional document about:
+// Create a professional document about:
 
-${state.prompt}
+// ${state.prompt}
 
-Rules:
+// Rules:
 
-- Generate a professional title.
-- Generate introduction.
-- Generate multiple sections.
-- Generate bullet points where required.
-- Generate conclusion.
-- No markdown.
-- No code blocks.
-- No ** symbols.
-- No ### headings.
-- Return plain text only.
+// - Generate a professional title.
+// - Generate introduction.
+// - Generate multiple sections.
+// - Generate bullet points where required.
+// - Generate conclusion.
+// - No markdown.
+// - No code blocks.
+// - No ** symbols.
+// - No ### headings.
+// - Return plain text only.
 
-`);
+// `);
 
-    const rawContent =
-      aiResponse?.content?.trim() ||
-      state.prompt;
+//     const rawContent =
+//       aiResponse?.content?.trim() ||
+//       state.prompt;
 
-    const lines =
-      rawContent
-        .split("\n")
-        .filter(line => line.trim());
+//     const lines =
+//       rawContent
+//         .split("\n")
+//         .filter(line => line.trim());
 
-    const generatedTitle =
-      lines?.[0]?.length < 120
-        ? lines[0]
-        : state.prompt;
+//     const generatedTitle =
+//       lines?.[0]?.length < 120
+//         ? lines[0]
+//         : state.prompt;
 
-    const cleanContent =
-      rawContent
-        .replace(/\*\*/g, "")
-        .replace(/```/g, "")
-        .replace(/###/g, "")
-        .replace(/##/g, "")
-        .replace(/#/g, "")
-        .trim();
+//     const cleanContent =
+//       rawContent
+//         .replace(/\*\*/g, "")
+//         .replace(/```/g, "")
+//         .replace(/###/g, "")
+//         .replace(/##/g, "")
+//         .replace(/#/g, "")
+//         .trim();
 
-    const fileName =
-      `pdf-${Date.now()}.pdf`;
+//     const fileName =
+//       `pdf-${Date.now()}.pdf`;
 
-    const doc =
-      new PDFDocument({
-        size: "A4",
-        margin: 50,
-        bufferPages: true,
-        info: {
-          Title: generatedTitle,
-          Author: "CortexAI",
-          Subject: state.prompt,
-          Creator: "CortexAI PDF Agent"
-        }
-      });
+//     const doc =
+//       new PDFDocument({
+//         size: "A4",
+//         margin: 50,
+//         bufferPages: true,
+//         info: {
+//           Title: generatedTitle,
+//           Author: "CortexAI",
+//           Subject: state.prompt,
+//           Creator: "CortexAI PDF Agent"
+//         }
+//       });
 
-    const chunks = [];
+//     const chunks = [];
 
-    doc.on("data", chunk => {
-      chunks.push(chunk);
-    });
+//     doc.on("data", chunk => {
+//       chunks.push(chunk);
+//     });
 
-    // Cover Title
+//     // Cover Title
 
-    doc
-      .fontSize(26)
-      .fillColor("#111827")
-      .text(
-        generatedTitle,
-        {
-          align: "center"
-        }
-      );
+//     doc
+//       .fontSize(26)
+//       .fillColor("#111827")
+//       .text(
+//         generatedTitle,
+//         {
+//           align: "center"
+//         }
+//       );
 
-    doc.moveDown();
+//     doc.moveDown();
 
-    doc
-      .fontSize(10)
-      .fillColor("#6B7280")
-      .text(
-        `Generated on ${new Date().toLocaleString()}`,
-        {
-          align: "center"
-        }
-      );
+//     doc
+//       .fontSize(10)
+//       .fillColor("#6B7280")
+//       .text(
+//         `Generated on ${new Date().toLocaleString()}`,
+//         {
+//           align: "center"
+//         }
+//       );
 
-    doc.moveDown(3);
+//     doc.moveDown(3);
 
-    // Content
+//     // Content
 
-    doc
-      .fontSize(12)
-      .fillColor("#374151")
-      .text(
-        cleanContent,
-        {
-          align: "left",
-          lineGap: 6
-        }
-      );
+//     doc
+//       .fontSize(12)
+//       .fillColor("#374151")
+//       .text(
+//         cleanContent,
+//         {
+//           align: "left",
+//           lineGap: 6
+//         }
+//       );
 
-    doc.moveDown(2);
+//     doc.moveDown(2);
 
-    doc
-      .fontSize(10)
-      .fillColor("#9CA3AF")
-      .text(
-        "Generated by CortexAI",
-        {
-          align: "center"
-        }
-      );
+//     doc
+//       .fontSize(10)
+//       .fillColor("#9CA3AF")
+//       .text(
+//         "Generated by CortexAI",
+//         {
+//           align: "center"
+//         }
+//       );
 
-    doc.end();
+//     doc.end();
 
-    await new Promise(
-      (resolve, reject) => {
+//     await new Promise(
+//       (resolve, reject) => {
 
-        doc.on(
-          "end",
-          resolve
-        );
+//         doc.on(
+//           "end",
+//           resolve
+//         );
 
-        doc.on(
-          "error",
-          reject
-        );
+//         doc.on(
+//           "error",
+//           reject
+//         );
 
-      }
-    );
+//       }
+//     );
 
-    const pdfBuffer =
-      Buffer.concat(chunks);
+//     const pdfBuffer =
+//       Buffer.concat(chunks);
 
-    await uploadToS3(
-      pdfBuffer,
-      fileName,
-      "application/pdf"
-    );
+//     await uploadToS3(
+//       pdfBuffer,
+//       fileName,
+//       "application/pdf"
+//     );
 
-    const downloadUrl =
-      await getDownloadUrl(
-        fileName,
-        24*60*60
-      );
+//     const downloadUrl =
+//       await getDownloadUrl(
+//         fileName,
+//         24*60*60
+//       );
 
-    return {
+//     return {
 
-      ...state,
+//       ...state,
 
-response: `
-# ✅ PDF Generated Successfully
+// response: `
+// # ✅ PDF Generated Successfully
 
-📄 **${generatedTitle}**
+// 📄 **${generatedTitle}**
 
-📥 [Download PDF](${downloadUrl})
+// 📥 [Download PDF](${downloadUrl})
 
-⏳ Link expires in 10 minutes.
-`.trim()
+// ⏳ Link expires in 10 minutes.
+// `.trim()
 
-    };
+//     };
 
-  } catch (error) {
+//   } catch (error) {
 
-    console.log(
-      "PDF Agent Error:",
-      error
-    );
+//     console.log(
+//       "PDF Agent Error:",
+//       error
+//     );
 
-    return {
+//     return {
 
-      ...state,
+//       ...state,
 
-      response:
-        "❌ Failed to generate PDF."
+//       response:
+//         "❌ Failed to generate PDF."
 
-    };
+//     };
 
-  }
+//   }
 
 };

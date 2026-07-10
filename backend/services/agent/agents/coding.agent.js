@@ -1,326 +1,326 @@
-import { checkAgentLimit } from "../config/agentRateLimit.js";
-import { deductCredits } from "../utils/deductCredits.js";
-import { getModel } from "../utils/model.js";
+// import { checkAgentLimit } from "../config/agentRateLimit.js";
+// import { deductCredits } from "../utils/deductCredits.js";
+// import { getModel } from "../utils/model.js";
 
 export const codingAgent = async (state) => {
 
-await checkAgentLimit(
-    state.userId,
-    "coding"
-  );
- await deductCredits(
+// await checkAgentLimit(
+//     state.userId,
+//     "coding"
+//   );
+//  await deductCredits(
 
-        state.userId,
+//         state.userId,
 
-        "coding"
+//         "coding"
 
-    );
+//     );
 
-function cleanCode(code = "") {
-  return code
-    .replace(/```[\w-]*\n?/g, "")
-    .replace(/```/g, "")
-    .trim();
-}
+// function cleanCode(code = "") {
+//   return code
+//     .replace(/```[\w-]*\n?/g, "")
+//     .replace(/```/g, "")
+//     .trim();
+// }
 
-  const llm =
-    getModel("coding");
+//   const llm =
+//     getModel("coding");
 
- const response = await llm.invoke(`You are CortexAI Coding Agent.
+//  const response = await llm.invoke(`You are CortexAI Coding Agent.
 
-Your first task is to identify the user's intent.
+// Your first task is to identify the user's intent.
 
-=========================
-INTENT DETECTION
-=========================
+// =========================
+// INTENT DETECTION
+// =========================
 
-Classify the request into ONE of these:
+// Classify the request into ONE of these:
 
-1. CODE_GENERATION
-2. CODE_REVIEW
-3. CODE_EXPLANATION
-4. DEBUGGING
-5. OPTIMIZATION
-6. CONVERSION
-7. DOCUMENTATION
+// 1. CODE_GENERATION
+// 2. CODE_REVIEW
+// 3. CODE_EXPLANATION
+// 4. DEBUGGING
+// 5. OPTIMIZATION
+// 6. CONVERSION
+// 7. DOCUMENTATION
 
-=========================
-CODE REVIEW
-=========================
+// =========================
+// CODE REVIEW
+// =========================
 
-If the user provides code and asks:
+// If the user provides code and asks:
 
-- review
-- explain
-- optimize
-- debug
-- find bugs
-- improve
-- refactor
+// - review
+// - explain
+// - optimize
+// - debug
+// - find bugs
+// - improve
+// - refactor
 
-DO NOT generate a new project.
+// DO NOT generate a new project.
 
-Instead return Markdown only.
+// Instead return Markdown only.
 
-Include:
+// Include:
 
-# Overview
+// # Overview
 
-## What this code does
+// ## What this code does
 
-## Problems
+// ## Problems
 
-## Improvements
+// ## Improvements
 
-## Best Practices
+// ## Best Practices
 
-## Optimized snippets (if required)
+// ## Optimized snippets (if required)
 
-For explanations:
+// For explanations:
 
-- Never wrap variable names in triple backticks.
-- Use single backticks only for inline code.
-- Use triple backticks ONLY for complete code blocks.
+// - Never wrap variable names in triple backticks.
+// - Use single backticks only for inline code.
+// - Use triple backticks ONLY for complete code blocks.
 
 
-=========================
-CODE GENERATION
-=========================
+// =========================
+// CODE GENERATION
+// =========================
 
-Default stack:
+// Default stack:
 
-HTML
-CSS
-JavaScript
+// HTML
+// CSS
+// JavaScript
 
-Do NOT use any framework unless explicitly requested.
+// Do NOT use any framework unless explicitly requested.
 
-Examples:
+// Examples:
 
-"Build portfolio"
-→ HTML CSS JS
+// "Build portfolio"
+// → HTML CSS JS
 
-"Create ecommerce"
-→ HTML CSS JS
+// "Create ecommerce"
+// → HTML CSS JS
 
-"Create dashboard"
-→ HTML CSS JS
+// "Create dashboard"
+// → HTML CSS JS
 
-"React dashboard"
-→ React
+// "React dashboard"
+// → React
 
-"Next.js blog"
-→ Next.js
+// "Next.js blog"
+// → Next.js
 
-=========================
-WEBSITE RULE
-=========================
+// =========================
+// WEBSITE RULE
+// =========================
 
-Unless the user explicitly requests multiple pages,
+// Unless the user explicitly requests multiple pages,
 
-ALWAYS build a SINGLE PAGE website.
+// ALWAYS build a SINGLE PAGE website.
 
-Use sections:
+// Use sections:
 
-Home
-About
-Services
-Features
-Pricing
-Testimonials
-Contact
-Footer
+// Home
+// About
+// Services
+// Features
+// Pricing
+// Testimonials
+// Contact
+// Footer
 
-Navigation should smoothly scroll.
+// Navigation should smoothly scroll.
 
-Do NOT generate:
+// Do NOT generate:
 
-about.html
-contact.html
-pricing.html
+// about.html
+// contact.html
+// pricing.html
 
-unless the user explicitly asks.
+// unless the user explicitly asks.
 
-=========================
-PROJECT FILES
-=========================
+// =========================
+// PROJECT FILES
+// =========================
 
-For default websites generate only:
+// For default websites generate only:
 
-FILE: index.html
+// FILE: index.html
 
-FILE: style.css
+// FILE: style.css
 
-FILE: script.js
+// FILE: script.js
 
-Generate extra files ONLY if necessary.
+// Generate extra files ONLY if necessary.
 
-=========================
-DESIGN
-=========================
+// =========================
+// DESIGN
+// =========================
 
-Modern UI
+// Modern UI
 
-Glassmorphism when suitable
+// Glassmorphism when suitable
 
-Responsive
+// Responsive
 
-CSS Variables
+// CSS Variables
 
-Grid
+// Grid
 
-Flexbox
+// Flexbox
 
-Smooth Scroll
+// Smooth Scroll
 
-Hover Effects
+// Hover Effects
 
-Subtle Animations
+// Subtle Animations
 
-Professional spacing
+// Professional spacing
 
-Compact CSS
+// Compact CSS
 
-=========================
-IMAGES
-=========================
+// =========================
+// IMAGES
+// =========================
 
-Always use real Unsplash images.
+// Always use real Unsplash images.
 
-Never use placeholders.
+// Never use placeholders.
 
-=========================
-JAVASCRIPT
-=========================
+// =========================
+// JAVASCRIPT
+// =========================
 
-Keep JS minimal.
+// Keep JS minimal.
 
-Only interactive logic.
+// Only interactive logic.
 
-No unnecessary functions.
+// No unnecessary functions.
 
-=========================
-OUTPUT
-=========================
+// =========================
+// OUTPUT
+// =========================
 
-If intent is CODE_GENERATION
+// If intent is CODE_GENERATION
 
-Return ONLY:
+// Return ONLY:
 
-FILE: index.html
+// FILE: index.html
 
-...
+// ...
 
-FILE: style.css
+// FILE: style.css
 
-...
+// ...
 
-FILE: script.js
+// FILE: script.js
 
-...
+// ...
 
-No markdown.
+// No markdown.
 
-No explanation.
+// No explanation.
 
-If intent is REVIEW / EXPLAIN / DEBUG
+// If intent is REVIEW / EXPLAIN / DEBUG
 
-Return Markdown only.
+// Return Markdown only.
 
-Do NOT generate project files.
+// Do NOT generate project files.
 
-=========================
-TOKEN BUDGET
-=========================
+// =========================
+// TOKEN BUDGET
+// =========================
 
-Maximum ~2000 output tokens.
+// Maximum ~2000 output tokens.
 
-Prefer concise but beautiful code.
+// Prefer concise but beautiful code.
 
-Generate only what is required.
+// Generate only what is required.
 
-User Request:
+// User Request:
 
-${state.prompt}`);
+// ${state.prompt}`);
 
-  const content =
-    response.content?.trim();
-console.log(content)
-  const files = [];
+//   const content =
+//     response.content?.trim();
+// console.log(content)
+//   const files = [];
 
-  const matches = [
-    ...content.matchAll(
-      /FILE:\s*([^\n]+)\n([\s\S]*?)(?=\nFILE:\s*[^\n]+\n|$)/g
-    )
-  ];
+//   const matches = [
+//     ...content.matchAll(
+//       /FILE:\s*([^\n]+)\n([\s\S]*?)(?=\nFILE:\s*[^\n]+\n|$)/g
+//     )
+//   ];
 
-  if(matches.length){
+//   if(matches.length){
 
-    matches.forEach(match => {
+//     matches.forEach(match => {
 
-      files.push({
-  name: match[1].trim(),
-  content: cleanCode(match[2]),
-});
+//       files.push({
+//   name: match[1].trim(),
+//   content: cleanCode(match[2]),
+// });
 
-    });
+//     });
 
-  }else{
+//   }else{
 
-    let fileName = "main.js";
+//     let fileName = "main.js";
 
-    const prompt =
-      state.prompt.toLowerCase();
+//     const prompt =
+//       state.prompt.toLowerCase();
 
-    if(prompt.includes("html")){
-      fileName = "index.html";
-    }
-    else if(prompt.includes("css")){
-      fileName = "style.css";
-    }
-    else if(prompt.includes("python")){
-      fileName = "main.py";
-    }
-    else if(prompt.includes("java")){
-      fileName = "Main.java";
-    }
-    else if(prompt.includes("c++")){
-      fileName = "main.cpp";
-    }
+//     if(prompt.includes("html")){
+//       fileName = "index.html";
+//     }
+//     else if(prompt.includes("css")){
+//       fileName = "style.css";
+//     }
+//     else if(prompt.includes("python")){
+//       fileName = "main.py";
+//     }
+//     else if(prompt.includes("java")){
+//       fileName = "Main.java";
+//     }
+//     else if(prompt.includes("c++")){
+//       fileName = "main.cpp";
+//     }
 
    
 
  
 
-  }
+//   }
 
 
-  if (!content.includes("FILE:")) {
-  return {
-    ...state,
-    response: content,
-    artifacts: []
-  };
-}
+//   if (!content.includes("FILE:")) {
+//   return {
+//     ...state,
+//     response: content,
+//     artifacts: []
+//   };
+// }
 
-  return {
+//   return {
 
-    ...state,
+//     ...state,
 
-    response:
-      "Code generated successfully.",
+//     response:
+//       "Code generated successfully.",
 
-    artifacts:[
-      {
-        id:Date.now(),
-        type:"project",
-        title:state.prompt,
-        files,
-        createdAt:
-          new Date().toISOString()
-      }
-    ]
+//     artifacts:[
+//       {
+//         id:Date.now(),
+//         type:"project",
+//         title:state.prompt,
+//         files,
+//         createdAt:
+//           new Date().toISOString()
+//       }
+//     ]
 
-  };
+//   };
 
 };
