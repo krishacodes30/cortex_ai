@@ -110,6 +110,7 @@ export default function MessageList() {
     const get = async () => {
       const data = await getMessages(selectedConversation?._id);
       dispatch(setMessages(data));
+  
   //     const latestArtifactMessage =
   // [...data]
   //   .reverse()
@@ -165,13 +166,13 @@ export default function MessageList() {
             // </motion.div>
           ))}
 
-          {isLoading && (
+          {isLoading && (<div></div>
             // <motion.div
             //   initial={{ opacity: 0, y: 8 }}
             //   animate={{ opacity: 1, y: 0 }}
             //   transition={{ duration: 0.2, ease: "easeOut" }}
             // >
-              <GeneratingIndicator />
+              // <GeneratingIndicator />
             // </motion.div>
           )}
         

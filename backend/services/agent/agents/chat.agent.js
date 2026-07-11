@@ -2,34 +2,37 @@ import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages
 import { getModel } from "../utils/model.js";
 // import { getMemory } from "../utils/memory.js";
 
+
 // import { checkAgentLimit } from "../config/agentRateLimit.js";
 // import { deductCredits } from "../utils/deductCredits.js";
 // import { getModel } from "../graph/llmModels.js";
+// import { imageAgent } from "./imageGen.agent.js";
+import { getMemory } from "../utils/memory.js";
 
 
-// export const chatAgent =async(state)=>{
+export const chatAgent =async(state)=>{
 
 
-// // await checkAgentLimit(
-// //     state.userId,
-// //     "chat"
-// //   );
+// await checkAgentLimit(
+//     state.userId,
+//     "chat"
+//   );
 
-// //    await deductCredits(
+//    await deductCredits(
 
-// //         state.userId,
+//         state.userId,
 
-// //         "chat"
+//         "chat"
 
-// //     );
+//     );
 
 
-//  const llm =await getModel("chat");
+ const llm =await getModel("chat");
 
-// //  const history =
-// //  await getMemory(
-// //   state.conversationId
-// //  );
+ const history =
+ await getMemory(
+  state.conversationId
+ );
 
  
 
@@ -44,6 +47,46 @@ import { getModel } from "../utils/model.js";
 //   : ""
 
 
+
+
+ const messages = [
+
+  new SystemMessage(
+`
+You are CortexAI, an intelligent AI assistant.
+
+
+
+
+
+If searchContext exists:
+
+- Use search results to answer.
+- Do not mention internal tools.
+
+Rules:
+
+- For simple questions, greetings, and short queries, respond naturally in plain text.
+- For technical, educational, coding, or detailed topics, use clean Markdown.
+
+Formatting:
+
+- Use # for titles and ## for sections.
+- Leave a blank line after headings.
+- Use bullet points for lists.
+- Use numbered lists for steps.
+- Use fenced code blocks with language tags for code.
+- Keep paragraphs short and readable.
+- Never write headings and content on the same line.
+- Never generate large walls of text.
+
+
+
+
+`
+  )
+
+ ];
 
 
 //  const messages = [
@@ -85,47 +128,47 @@ import { getModel } from "../utils/model.js";
 
 //  ];
 
-//  history.forEach((msg)=>{
+ history.forEach((msg)=>{
 
-//   if(
-//    msg.role === "user"
-//   ){
+  if(
+   msg.role === "user"
+  ){
 
-//    messages.push(
+   messages.push(
 
-//     new HumanMessage(
-//      msg.content
-//     )
+    new HumanMessage(
+     msg.content
+    )
 
-//    );
+   );
 
-//   }
+  }
 
-//   if(
-//    msg.role === "assistant"
-//   ){
+  if(
+   msg.role === "assistant"
+  ){
 
-//    messages.push(
+   messages.push(
 
-//     new AIMessage(
-//      msg.content
-//     )
+    new AIMessage(
+     msg.content
+    )
 
-//    );
+   );
 
-//   }
+  }
 
-//  });
+ });
 
-//  messages.push(
+ messages.push(
 
-//   new HumanMessage(
-//    state.prompt
-//   )
+  new HumanMessage(
+   state.prompt
+  )
 
-//  );
+ );
 
-//  const response = await llm.invoke(messages);
+ const response = await llm.invoke(messages);
 
 
 
@@ -133,33 +176,53 @@ import { getModel } from "../utils/model.js";
 
 
 
-// return {
-//   ...state,
+return {
+  ...state,
 
-//   response:response.content,
+  response:response.content,
+  images:[]
 //   images:images
   
-// };
+};
 
-// };
+};
 
 
-export const chatAgent=async (state) => {
-    const llm=await getModel("chat")
-    const systemPrompt="You are CortexAI, an intelligent AI assistant."
-    const response=await llm.invoke([
-        {
-            "role":"system",
-            "content":systemPrompt
-        },
-        {
-            "role":"human",
-            "content":state.prompt
-        }
-    ])
+// export const chatAgent=async (state) => {
+//     const llm=await getModel("chat")
+//     const systemPrompt=`Rules:
 
-    return {
-        ...state,
-        aiResponse:response.content
-    }
-}
+// - For simple questions, greetings, and short queries, respond naturally in plain text.
+// - For technical, educational, coding, or detailed topics, use clean Markdown.
+
+// Formatting:
+
+//  - Use # for titles and ## for sections.
+//  - Leave a blank line after headings.
+// - Use bullet points for lists.
+// - Use numbered lists for steps.
+// - Use fenced code blocks with language tags for code.
+// - Keep paragraphs short and readable.
+// - Never write headings and content on the same line.
+// - Never generate large walls of text.
+
+
+
+
+// // `
+//     const response=await llm.invoke([
+//         {
+//             "role":"system",
+//             "content":systemPrompt
+//         },
+//         {
+//             "role":"human",
+//             "content":state.prompt
+//         }
+//     ])
+
+//     return {
+//         ...state,
+//         response:response.content
+//     }
+// }

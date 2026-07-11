@@ -1,11 +1,8 @@
 import { ChatGoogleGenerativeAI }
   from "@langchain/google-genai";
 import { ChatGroq } from "@langchain/groq"
-import path from "path";
-import { fileURLToPath } from "url";
-
 import dotenv from "dotenv"
-
+dotenv.config()
 // import { ChatOpenRouter } from "@langchain/openrouter";
 
 // const openRouter = new ChatOpenRouter({
@@ -14,9 +11,6 @@ import dotenv from "dotenv"
 //   maxTokens:2500
 //   // other params...
 // });
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 
 export const gemini =
@@ -39,8 +33,8 @@ export const getModel =
 
     switch (agent) {
 
-    //   case "coding":
-    //     return openRouter;
+      // case "coding":
+      //   return openRouter;
 
       case "image":
         return groq;
