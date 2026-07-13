@@ -177,7 +177,7 @@ const markdown = (content || "")
           <SyntaxHighlighter
             language={language}
             style={oneDark}
-            wrapLongLines
+            // wrapLongLines
             showLineNumbers
             customStyle={{
               margin: 0,

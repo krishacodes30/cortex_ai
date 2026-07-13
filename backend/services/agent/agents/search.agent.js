@@ -2,6 +2,8 @@
 // import { deductCredits } from "../utils/deductCredits.js";
 // import { searchTool } from "../utils/tavily.js";
 
+import { searchTool } from "../config/tavily.js";
+
 
 
 export const searchAgent =
@@ -17,39 +19,39 @@ async(state)=>{
 //         "search"
 
 //     ); 
-//  try{
+ try{
 
-//   const results =
-//   await searchTool.invoke({
+  const results =
+  await searchTool.invoke({
 
-//  query:state.prompt
+ query:state.prompt
 
-// } );
+} );
+console.log("===============================================-----------------=====================================")
+console.log(results)
 
-// console.log(results)
+  return {
 
-//   return {
+   ...state,
 
-//    ...state,
-
-//    searchResults:
-//    results,
+   searchResults:
+   results,
    
 
-//   };
+  };
 
-//  }catch(error){
+ }catch(error){
 
-//   console.log(error);
+  console.log(error);
 
-//   return {
+  return {
 
-//    ...state,
+   ...state,
 
-//    searchResults:[]
+   searchResults:[]
 
-//   };
+  };
 
-//  }
+ }
 
 };
